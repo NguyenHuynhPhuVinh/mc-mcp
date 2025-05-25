@@ -26,7 +26,7 @@ export const ENDPOINTS = {
 
 // Cấu hình API
 export const API_CONFIG = {
-  TIMEOUT: 10000, // Tăng timeout vì một số API Minecraft có thể mất nhiều thời gian
+  TIMEOUT: 0, // Đặt timeout = 0 để không có timeout (vì API Minecraft có thể trả về rất chậm)
   RETRY_COUNT: 3,
   RETRY_DELAY: 1000,
 };

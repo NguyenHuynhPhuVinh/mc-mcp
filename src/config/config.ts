@@ -27,7 +27,7 @@ export const APP_CONFIG = {
   VERSION: "1.0.0",
 
   // Thời gian chờ mặc định (ms)
-  DEFAULT_TIMEOUT: 10000,
+  DEFAULT_TIMEOUT: 0, // Đặt timeout = 0 để không có timeout
 
   // Số lần thử lại tối đa
   MAX_RETRIES: 3,
