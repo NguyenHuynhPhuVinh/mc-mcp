@@ -1,5 +1,5 @@
 {
-  "name": "mc-mcp",
+  "name": "@tomisakae/mc-mcp",
   "version": "1.0.0",
   "description": "MCP dành cho Minecraft",
   "main": "index.js",

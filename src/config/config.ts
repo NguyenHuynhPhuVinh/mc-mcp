@@ -21,13 +21,13 @@ export const ENV = {
  */
 export const APP_CONFIG = {
   // Tên ứng dụng
-  NAME: "MCP Server",
+  NAME: "Minecraft MCP Server",
 
   // Phiên bản
   VERSION: "1.0.0",
 
   // Thời gian chờ mặc định (ms)
-  DEFAULT_TIMEOUT: 5000,
+  DEFAULT_TIMEOUT: 10000,
 
   // Số lần thử lại tối đa
   MAX_RETRIES: 3,
