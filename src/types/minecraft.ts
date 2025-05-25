@@ -186,14 +186,14 @@ export interface CommandResult {
  * Tham số yêu cầu thông tin người chơi
  */
 export interface PlayerInfoRequest {
-  playerName: string;
+  playerName?: string; // Trở thành tùy chọn, nếu không cung cấp sẽ sử dụng tên người chơi mặc định
 }
 
 /**
  * Tham số yêu cầu thông tin xung quanh người chơi
  */
 export interface PlayerSurroundingsRequest {
-  playerName: string;
+  playerName?: string; // Trở thành tùy chọn
   radius?: number;
   verticalRadius?: number;
   includeCommonBlocks?: boolean;
@@ -203,7 +203,7 @@ export interface PlayerSurroundingsRequest {
  * Tham số yêu cầu thông tin entity gần người chơi
  */
 export interface PlayerEntitiesRequest {
-  playerName: string;
+  playerName?: string; // Trở thành tùy chọn
   radius?: number;
   entityType?: string;
   includePassive?: boolean;
@@ -215,4 +215,34 @@ export interface PlayerEntitiesRequest {
  */
 export interface CommandRequest {
   command: string;
+}
+
+/**
+ * Tham số thực thi lệnh Baritone
+ */
+export interface BaritoneCommandRequest {
+  playerName?: string; // Tùy chọn, nếu không cung cấp sẽ sử dụng tên người chơi mặc định
+  command: string; // Lệnh Baritone cần thực thi (không cần thêm prefix #)
+}
+
+/**
+ * Kết quả thực thi lệnh Baritone
+ */
+export interface BaritoneCommandResult {
+  command: string;
+  playerName: string;
+  timestamp: number;
+  status: string;
+  note: string;
+}
+
+/**
+ * Danh sách lệnh Baritone
+ */
+export interface BaritoneCommandsList {
+  prefix: string;
+  description: string;
+  commands: Record<string, string>;
+  settings: string[];
+  examples: Record<string, string>;
 }

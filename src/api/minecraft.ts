@@ -15,7 +15,10 @@ import {
   PlayerStatistics,
   WorldInfo,
   CommandRequest,
-  CommandResult
+  CommandResult,
+  BaritoneCommandRequest,
+  BaritoneCommandResult,
+  BaritoneCommandsList
 } from "../types/minecraft.js";
 
 /**
@@ -160,6 +163,40 @@ export class MinecraftApi {
       );
     } catch (error) {
       console.error("Lỗi khi thực thi lệnh:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Thực thi lệnh Baritone
+   * @param params Tham số yêu cầu
+   * @returns Kết quả thực thi lệnh Baritone
+   */
+  async executeBaritoneCommand(
+    params: BaritoneCommandRequest
+  ): Promise<ApiResponse<BaritoneCommandResult>> {
+    try {
+      return await this.apiClient.post<ApiResponse<BaritoneCommandResult>>(
+        ENDPOINTS.BARITONE_COMMAND,
+        params
+      );
+    } catch (error) {
+      console.error("Lỗi khi thực thi lệnh Baritone:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Lấy danh sách lệnh Baritone
+   * @returns Danh sách lệnh Baritone
+   */
+  async getBaritoneCommandsList(): Promise<ApiResponse<BaritoneCommandsList>> {
+    try {
+      return await this.apiClient.get<ApiResponse<BaritoneCommandsList>>(
+        ENDPOINTS.BARITONE_COMMANDS_LIST
+      );
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách lệnh Baritone:", error);
       throw error;
     }
   }

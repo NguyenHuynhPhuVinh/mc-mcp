@@ -50,7 +50,7 @@ export function registerMinecraftTools(server: McpServer) {
     "getPlayerInfo",
     "Lấy thông tin chi tiết về người chơi Minecraft",
     {
-      playerName: z.string().describe("Tên người chơi"),
+      playerName: z.string().optional().describe("Tên người chơi (tùy chọn, nếu không cung cấp sẽ sử dụng tên người chơi mặc định)"),
     },
     async ({ playerName }) => {
       try {
@@ -85,7 +85,7 @@ export function registerMinecraftTools(server: McpServer) {
     "getPlayerInventory",
     "Lấy thông tin túi đồ của người chơi Minecraft",
     {
-      playerName: z.string().describe("Tên người chơi"),
+      playerName: z.string().optional().describe("Tên người chơi (tùy chọn, nếu không cung cấp sẽ sử dụng tên người chơi mặc định)"),
     },
     async ({ playerName }) => {
       try {
@@ -120,7 +120,7 @@ export function registerMinecraftTools(server: McpServer) {
     "getPlayerSurroundings",
     "Lấy thông tin về các khối xung quanh người chơi Minecraft",
     {
-      playerName: z.string().describe("Tên người chơi"),
+      playerName: z.string().optional().describe("Tên người chơi (tùy chọn, nếu không cung cấp sẽ sử dụng tên người chơi mặc định)"),
       radius: z.number().optional().describe("Bán kính quét ngang (mặc định: 15, tối đa: 30)"),
       verticalRadius: z.number().optional().describe("Bán kính quét dọc (mặc định: gấp đôi radius, tối đa: 60)"),
       includeCommonBlocks: z.boolean().optional().describe("Có bao gồm các khối phổ biến không (mặc định: false)"),
@@ -163,7 +163,7 @@ export function registerMinecraftTools(server: McpServer) {
     "getPlayerEntities",
     "Lấy danh sách các entity gần người chơi Minecraft",
     {
-      playerName: z.string().describe("Tên người chơi"),
+      playerName: z.string().optional().describe("Tên người chơi (tùy chọn, nếu không cung cấp sẽ sử dụng tên người chơi mặc định)"),
       radius: z.number().optional().describe("Bán kính quét (mặc định: 10, tối đa: 50)"),
       entityType: z.string().optional().describe("Loại entity cần lọc, để trống để lấy tất cả"),
       includePassive: z.boolean().optional().describe("Có bao gồm entity thụ động không (mặc định: true)"),
@@ -208,7 +208,7 @@ export function registerMinecraftTools(server: McpServer) {
     "getPlayerStatistics",
     "Lấy thống kê của người chơi Minecraft",
     {
-      playerName: z.string().describe("Tên người chơi"),
+      playerName: z.string().optional().describe("Tên người chơi (tùy chọn, nếu không cung cấp sẽ sử dụng tên người chơi mặc định)"),
     },
     async ({ playerName }) => {
       try {
@@ -306,6 +306,75 @@ export function registerMinecraftTools(server: McpServer) {
     }
   );
 
+  // Đăng ký công cụ thực thi lệnh Baritone
+  server.tool(
+    "executeBaritoneCommand",
+    "Thực thi lệnh Baritone cho người chơi Minecraft",
+    {
+      playerName: z.string().optional().describe("Tên người chơi (tùy chọn, nếu không cung cấp sẽ sử dụng tên người chơi mặc định)"),
+      command: z.string().describe("Lệnh Baritone cần thực thi (không cần thêm prefix #)"),
+    },
+    async ({ playerName, command }) => {
+      try {
+        const response = await minecraftApi.executeBaritoneCommand({ playerName, command });
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(response, null, 2),
+            },
+          ],
+        };
+      } catch (error: unknown) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                message: `Không thể thực thi lệnh Baritone: ${(error as Error).message}`,
+                data: null
+              }, null, 2),
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // Đăng ký công cụ lấy danh sách lệnh Baritone
+  server.tool(
+    "getBaritoneCommandsList",
+    "Lấy danh sách các lệnh Baritone hỗ trợ",
+    {},
+    async () => {
+      try {
+        const response = await minecraftApi.getBaritoneCommandsList();
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(response, null, 2),
+            },
+          ],
+        };
+      } catch (error: unknown) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                message: `Không thể lấy danh sách lệnh Baritone: ${(error as Error).message}`,
+                data: null
+              }, null, 2),
+            },
+          ],
+        };
+      }
+    }
+  );
+
   // Đăng ký công cụ hướng dẫn Minecraft
   server.tool(
     "minecraftHelp",
@@ -339,6 +408,13 @@ Minecraft MCP là một Model Context Protocol cho phép tương tác với Mine
 ### Thực thi lệnh
 - **executeCommand**: Thực thi lệnh Minecraft
 
+### Baritone
+- **executeBaritoneCommand**: Thực thi lệnh Baritone cho người chơi
+- **getBaritoneCommandsList**: Lấy danh sách các lệnh Baritone hỗ trợ
+
+## Lưu ý về tên người chơi
+Tất cả các API liên quan đến người chơi đều hỗ trợ việc sử dụng tên người chơi mặc định. Điều này có nghĩa là bạn không cần phải cung cấp tham số playerName trong mỗi request. Nếu bạn không cung cấp tên người chơi, hệ thống sẽ tự động sử dụng tên của chủ server hoặc người chơi đầu tiên trong danh sách người chơi online.
+
 ## Yêu cầu
 - Minecraft server phải đang chạy
 - API mod phải được cài đặt
@@ -346,8 +422,10 @@ Minecraft MCP là một Model Context Protocol cho phép tương tác với Mine
 
 ## Ví dụ sử dụng
 1. Kiểm tra trạng thái server: \`checkServerHealth\`
-2. Lấy thông tin người chơi: \`getPlayerInfo playerName="Steve"\`
-3. Thực thi lệnh: \`executeCommand command="give @p diamond 64"\``,
+2. Lấy thông tin người chơi: \`getPlayerInfo\` (không cần playerName)
+3. Thực thi lệnh: \`executeCommand command="give @p diamond 64"\`
+4. Thực thi lệnh Baritone: \`executeBaritoneCommand command="goto 100 64 -200"\`
+5. Lấy danh sách lệnh Baritone: \`getBaritoneCommandsList\``,
           },
         ],
       };
