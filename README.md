@@ -2,7 +2,7 @@
 
 ## Giới thiệu
 
-Minecraft MCP là một Model Context Protocol (MCP) server dành cho Minecraft, cho phép bạn tương tác với Minecraft thông qua các công cụ MCP. Nó sử dụng API RESTful được cung cấp bởi Minecraft MCP API Mod để truy cập thông tin về người chơi, thế giới và thực thi lệnh từ bên ngoài game.
+Minecraft MCP là một Model Context Protocol (MCP) server dành cho Minecraft, cho phép bạn tương tác với Minecraft thông qua các công cụ MCP. Nó sử dụng API RESTful được cung cấp bởi Minecraft MCP API Mod để truy cập thông tin về người chơi, thế giới, vật phẩm, công thức chế tạo và thực thi lệnh từ bên ngoài game.
 
 ## Các tính năng chính
 
@@ -14,6 +14,8 @@ Minecraft MCP là một Model Context Protocol (MCP) server dành cho Minecraft,
 - Xem thống kê của người chơi
 - Lấy thông tin về thế giới Minecraft
 - Thực thi lệnh Minecraft
+- Lấy danh sách vật phẩm trong game
+- Lấy công thức chế tạo của vật phẩm
 
 ## Yêu cầu
 
@@ -22,7 +24,7 @@ Minecraft MCP là một Model Context Protocol (MCP) server dành cho Minecraft,
 - Đảm bảo bạn đã cài đặt Minecraft 1.21.1 với Fabric Loader
 - Tải mod và đặt vào thư mục mods của Minecraft
 - Khởi động Minecraft server hoặc singleplayer world
-- API server sẽ tự động chạy trên cổng 7070
+- API server sẽ tự động chạy trên cổng 8080
 
 ### 2. Cài đặt Minecraft MCP
 
@@ -108,6 +110,18 @@ getWorldInfo
 executeCommand command="give @p diamond 64"
 ```
 
+### Lấy danh sách vật phẩm
+
+```
+getItemsList
+```
+
+### Lấy công thức chế tạo
+
+```
+getItemRecipes itemId="minecraft:diamond_sword"
+```
+
 ### Hiển thị hướng dẫn
 
 ```
@@ -119,6 +133,7 @@ minecraftHelp
 - API server chỉ hoạt động khi Minecraft server đang chạy
 - Các API liên quan đến người chơi chỉ hoạt động khi người chơi đang online
 - Bán kính quét càng lớn, thời gian phản hồi càng lâu
+- Đảm bảo rằng bạn đang sử dụng phiên bản mới nhất của Minecraft MCP API Mod
 
 ## Giấy phép
 

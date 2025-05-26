@@ -16,9 +16,9 @@ import {
   WorldInfo,
   CommandRequest,
   CommandResult,
-  BaritoneCommandRequest,
-  BaritoneCommandResult,
-  BaritoneCommandsList
+  ItemsList,
+  ItemRecipe,
+  ItemRecipeRequest
 } from "../types/minecraft.js";
 
 /**
@@ -168,35 +168,35 @@ export class MinecraftApi {
   }
 
   /**
-   * Thực thi lệnh Baritone
-   * @param params Tham số yêu cầu
-   * @returns Kết quả thực thi lệnh Baritone
+   * Lấy danh sách vật phẩm trong game
+   * @returns Danh sách vật phẩm
    */
-  async executeBaritoneCommand(
-    params: BaritoneCommandRequest
-  ): Promise<ApiResponse<BaritoneCommandResult>> {
+  async getItemsList(): Promise<ApiResponse<ItemsList>> {
     try {
-      return await this.apiClient.post<ApiResponse<BaritoneCommandResult>>(
-        ENDPOINTS.BARITONE_COMMAND,
-        params
+      return await this.apiClient.get<ApiResponse<ItemsList>>(
+        ENDPOINTS.ITEMS_LIST
       );
     } catch (error) {
-      console.error("Lỗi khi thực thi lệnh Baritone:", error);
+      console.error("Lỗi khi lấy danh sách vật phẩm:", error);
       throw error;
     }
   }
 
   /**
-   * Lấy danh sách lệnh Baritone
-   * @returns Danh sách lệnh Baritone
+   * Lấy công thức chế tạo vật phẩm
+   * @param params Tham số yêu cầu
+   * @returns Công thức chế tạo vật phẩm
    */
-  async getBaritoneCommandsList(): Promise<ApiResponse<BaritoneCommandsList>> {
+  async getItemRecipes(
+    params: ItemRecipeRequest
+  ): Promise<ApiResponse<ItemRecipe[]>> {
     try {
-      return await this.apiClient.get<ApiResponse<BaritoneCommandsList>>(
-        ENDPOINTS.BARITONE_COMMANDS_LIST
+      return await this.apiClient.post<ApiResponse<ItemRecipe[]>>(
+        ENDPOINTS.ITEM_RECIPES,
+        params
       );
     } catch (error) {
-      console.error("Lỗi khi lấy danh sách lệnh Baritone:", error);
+      console.error("Lỗi khi lấy công thức chế tạo vật phẩm:", error);
       throw error;
     }
   }

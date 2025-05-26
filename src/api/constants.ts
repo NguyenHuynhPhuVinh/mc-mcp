@@ -23,9 +23,9 @@ export const ENDPOINTS = {
   // Endpoint thực thi lệnh
   COMMAND: '/api/command',
   
-  // Endpoint Baritone
-  BARITONE_COMMAND: '/api/player/baritone',
-  BARITONE_COMMANDS_LIST: '/api/player/baritone/commands',
+  // Endpoint vật phẩm và công thức
+  ITEMS_LIST: '/api/items',
+  ITEM_RECIPES: '/api/items/recipes',
 };
 
 // Cấu hình API

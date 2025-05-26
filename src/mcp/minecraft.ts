@@ -306,17 +306,14 @@ export function registerMinecraftTools(server: McpServer) {
     }
   );
 
-  // Đăng ký công cụ thực thi lệnh Baritone
+  // Đăng ký công cụ lấy danh sách vật phẩm
   server.tool(
-    "executeBaritoneCommand",
-    "Thực thi lệnh Baritone cho người chơi Minecraft",
-    {
-      playerName: z.string().optional().describe("Tên người chơi (tùy chọn, nếu không cung cấp sẽ sử dụng tên người chơi mặc định)"),
-      command: z.string().describe("Lệnh Baritone cần thực thi (không cần thêm prefix #)"),
-    },
-    async ({ playerName, command }) => {
+    "getItemsList",
+    "Lấy danh sách tất cả các vật phẩm trong Minecraft",
+    {},
+    async () => {
       try {
-        const response = await minecraftApi.executeBaritoneCommand({ playerName, command });
+        const response = await minecraftApi.getItemsList();
         return {
           content: [
             {
@@ -332,7 +329,7 @@ export function registerMinecraftTools(server: McpServer) {
               type: "text",
               text: JSON.stringify({
                 success: false,
-                message: `Không thể thực thi lệnh Baritone: ${(error as Error).message}`,
+                message: `Không thể lấy danh sách vật phẩm: ${(error as Error).message}`,
                 data: null
               }, null, 2),
             },
@@ -342,14 +339,16 @@ export function registerMinecraftTools(server: McpServer) {
     }
   );
 
-  // Đăng ký công cụ lấy danh sách lệnh Baritone
+  // Đăng ký công cụ lấy công thức chế tạo vật phẩm
   server.tool(
-    "getBaritoneCommandsList",
-    "Lấy danh sách các lệnh Baritone hỗ trợ",
-    {},
-    async () => {
+    "getItemRecipes",
+    "Lấy công thức chế tạo của một vật phẩm cụ thể",
+    {
+      itemId: z.string().describe("ID của vật phẩm cần lấy công thức chế tạo (ví dụ: minecraft:diamond_sword)"),
+    },
+    async ({ itemId }) => {
       try {
-        const response = await minecraftApi.getBaritoneCommandsList();
+        const response = await minecraftApi.getItemRecipes({ itemId });
         return {
           content: [
             {
@@ -365,7 +364,7 @@ export function registerMinecraftTools(server: McpServer) {
               type: "text",
               text: JSON.stringify({
                 success: false,
-                message: `Không thể lấy danh sách lệnh Baritone: ${(error as Error).message}`,
+                message: `Không thể lấy công thức chế tạo vật phẩm: ${(error as Error).message}`,
                 data: null
               }, null, 2),
             },
@@ -388,7 +387,7 @@ export function registerMinecraftTools(server: McpServer) {
             text: `# Hướng dẫn sử dụng Minecraft MCP
 
 ## Giới thiệu
-Minecraft MCP là một Model Context Protocol cho phép tương tác với Minecraft thông qua API. Nó cung cấp các công cụ để truy cập thông tin về người chơi, thế giới và thực thi lệnh từ bên ngoài game.
+Minecraft MCP là một Model Context Protocol cho phép tương tác với Minecraft thông qua API. Nó cung cấp các công cụ để truy cập thông tin về người chơi, thế giới, vật phẩm và thực thi lệnh từ bên ngoài game.
 
 ## Các công cụ có sẵn
 
@@ -408,9 +407,9 @@ Minecraft MCP là một Model Context Protocol cho phép tương tác với Mine
 ### Thực thi lệnh
 - **executeCommand**: Thực thi lệnh Minecraft
 
-### Baritone
-- **executeBaritoneCommand**: Thực thi lệnh Baritone cho người chơi
-- **getBaritoneCommandsList**: Lấy danh sách các lệnh Baritone hỗ trợ
+### Vật phẩm và công thức
+- **getItemsList**: Lấy danh sách tất cả các vật phẩm trong game
+- **getItemRecipes**: Lấy công thức chế tạo của một vật phẩm cụ thể
 
 ## Lưu ý về tên người chơi
 Tất cả các API liên quan đến người chơi đều hỗ trợ việc sử dụng tên người chơi mặc định. Điều này có nghĩa là bạn không cần phải cung cấp tham số playerName trong mỗi request. Nếu bạn không cung cấp tên người chơi, hệ thống sẽ tự động sử dụng tên của chủ server hoặc người chơi đầu tiên trong danh sách người chơi online.
@@ -418,17 +417,16 @@ Tất cả các API liên quan đến người chơi đều hỗ trợ việc s�
 ## Yêu cầu
 - Minecraft server phải đang chạy
 - API mod phải được cài đặt
-- Server API phải đang chạy trên cổng 7070
+- Server API phải đang chạy trên cổng 8080
 
 ## Ví dụ sử dụng
 1. Kiểm tra trạng thái server: \`checkServerHealth\`
 2. Lấy thông tin người chơi: \`getPlayerInfo\` (không cần playerName)
 3. Thực thi lệnh: \`executeCommand command="give @p diamond 64"\`
-4. Thực thi lệnh Baritone: \`executeBaritoneCommand command="goto 100 64 -200"\`
-5. Lấy danh sách lệnh Baritone: \`getBaritoneCommandsList\``,
+4. Lấy danh sách vật phẩm: \`getItemsList\`
+5. Lấy công thức chế tạo: \`getItemRecipes itemId="minecraft:diamond_sword"\``
           },
         ],
       };
-    }
-  );
+    });
 }

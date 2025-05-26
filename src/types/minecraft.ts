@@ -218,31 +218,63 @@ export interface CommandRequest {
 }
 
 /**
- * Tham số thực thi lệnh Baritone
+ * Vật phẩm trong danh sách vật phẩm
  */
-export interface BaritoneCommandRequest {
-  playerName?: string; // Tùy chọn, nếu không cung cấp sẽ sử dụng tên người chơi mặc định
-  command: string; // Lệnh Baritone cần thực thi (không cần thêm prefix #)
+export interface ItemInfo {
+  id: string;
+  name: string;
+  translatedName: string;
+  maxStackSize: number;
+  hasRecipe: boolean;
 }
 
 /**
- * Kết quả thực thi lệnh Baritone
+ * Danh sách vật phẩm
  */
-export interface BaritoneCommandResult {
-  command: string;
-  playerName: string;
-  timestamp: number;
-  status: string;
-  note: string;
+export interface ItemsList extends Array<string> {}
+
+/**
+ * Thành phần của công thức
+ */
+export interface RecipeIngredient {
+  id: string;
+  name: string;
+  count: number;
 }
 
 /**
- * Danh sách lệnh Baritone
+ * Ký hiệu trong lưới công thức
  */
-export interface BaritoneCommandsList {
-  prefix: string;
-  description: string;
-  commands: Record<string, string>;
-  settings: string[];
-  examples: Record<string, string>;
+export interface RecipeLegend {
+  [key: string]: {
+    id: string;
+    name: string;
+  };
+}
+
+/**
+ * Mẫu công thức
+ */
+export interface RecipePattern {
+  grid: string[][];
+  legend: RecipeLegend;
+}
+
+/**
+ * Công thức chế tạo
+ */
+export interface ItemRecipe {
+  id: string;
+  type: string;
+  result: ItemInfo;
+  resultCount: number;
+  ingredients: RecipeIngredient[];
+  pattern?: RecipePattern;
+}
+
+/**
+ * Tham số yêu cầu công thức chế tạo
+ */
+export interface ItemRecipeRequest {
+  itemId: string;
 }
